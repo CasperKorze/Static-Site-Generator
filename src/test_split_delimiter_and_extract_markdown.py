@@ -2,7 +2,7 @@ import unittest
 
 from textnode import *
 from split_delimiter import split_nodes_delimiter
-from extract_markdown_images_and_links import extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link
+from extract_markdown_images_and_links import extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link, text_to_textnodes
 
 
 class TestSplitNodesDelimiter(unittest.TestCase):
@@ -50,11 +50,11 @@ class TestSplitNodesDelimiter(unittest.TestCase):
         self.assertEqual(result, expected)
 
 
-        def test_split_multiple_delimiters_code_and_bold(self):
-            nodes = [TextNode("This is *bold* and _italic_ text, and `code` text. Pretty *fun* right?", TextType.TEXT)]
-            result = split_nodes_delimiter(nodes, "`", TextType.CODE)
-            result = split_nodes_delimiter(result, "*", TextType.BOLD)
-            expected = [
+    def test_split_multiple_delimiters_code_and_bold(self):
+        nodes = [TextNode("This is *bold* and _italic_ text, and `code` text. Pretty *fun* right?", TextType.TEXT)]
+        result = split_nodes_delimiter(nodes, "`", TextType.CODE)
+        result = split_nodes_delimiter(result, "*", TextType.BOLD)
+        expected = [
                 TextNode("This is ", TextType.TEXT),
                 TextNode("bold", TextType.BOLD),
                 TextNode(" and _italic_ text, and ", TextType.TEXT),
@@ -63,7 +63,7 @@ class TestSplitNodesDelimiter(unittest.TestCase):
                 TextNode("fun", TextType.BOLD),
                 TextNode(" right?", TextType.TEXT)
             ]
-            self.assertEqual(result, expected)
+        self.assertEqual(result, expected)
 
 
 class TestExtractMarkdownImagesAndLinks(unittest.TestCase):
@@ -200,6 +200,40 @@ class TestExtractMarkdownImagesAndLinks(unittest.TestCase):
         ]
         self.assertEqual(new_nodes, expected)
 
+    def test_text_to_textnodes(self):
+        text = "This is **text** with an _italic_ word and a `code block` and an ![image](img.png) and a [link](https://boot.dev)"
+        result = text_to_textnodes(text)
+        expected = [
+            TextNode("This is ", TextType.TEXT),
+            TextNode("text", TextType.BOLD),
+            TextNode(" with an ", TextType.TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" word and a ", TextType.TEXT),
+            TextNode("code block", TextType.CODE),
+            TextNode(" and an ", TextType.TEXT),
+            TextNode("image", TextType.IMAGE, "img.png"),
+            TextNode(" and a ", TextType.TEXT),
+            TextNode("link", TextType.LINK, "https://boot.dev"),
+        ]
+        self.assertEqual(result, expected) 
+
+    def test_text_to_textnodes_plain_text(self):
+        text = "Just normal text"
+        result = text_to_textnodes(text)
+        expected = [TextNode("Just normal text", TextType.TEXT)]
+        self.assertEqual(result, expected)
+
+    def test_text_to_textnodes_multiple_same_types(self):
+        text = "**bold1** and **bold2** with  and "
+        result = text_to_textnodes(text)
+        expected = [
+            TextNode("bold1", TextType.BOLD),
+            TextNode(" and ", TextType.TEXT),
+            TextNode("bold2", TextType.BOLD),
+            TextNode(" with  and ", TextType.TEXT),
+        ]
+        self.assertEqual(result, expected)
+            
 
 
 
