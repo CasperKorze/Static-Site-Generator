@@ -17,11 +17,11 @@ def text_to_textnodes(text):
 
     return nodes
 
+def text_to_children(text):
+    return [textnode_to_htmlnode(node) for node in text_to_textnodes(text)]
 
 def markdown_to_html_node(markdown: str):
-    
     blocks = markdown_to_blocks(markdown)
-
     children = []
 
     for block in blocks:
@@ -29,13 +29,7 @@ def markdown_to_html_node(markdown: str):
 
         if block_type == BlockType.PARAGRAPH:
             new_block = block.replace("\n", " ")
-            text_node = text_to_textnodes(new_block)
-
-            html_node = textnode_to_htmlnode(text_node)
-
-            new_node = ParentNode("p", html_node)
-
-            children.append(new_node)
+            children.append(ParentNode("p", text_to_children(new_block)))
 
         if block_type == BlockType.HEADING:
             count = 0
@@ -46,7 +40,7 @@ def markdown_to_html_node(markdown: str):
                     break
             new_block = block[count:].strip()
 
-            
+    return ParentNode("div", children)
 
 
 

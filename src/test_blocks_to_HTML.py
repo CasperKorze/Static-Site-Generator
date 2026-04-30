@@ -7,13 +7,20 @@ class TestBlocksToHTML(unittest.TestCase):
     def test_markdown_to_html_node_paragraph(self):
         md = "This is a paragraph."
         html_node = markdown_to_html_node(md)
-        expected = ParentNode("p", [TextNode("This is a paragraph.", TextType.TEXT)])
-        self.assertEqual(html_node, expected)
+        html = html_node.to_html()
+        self.assertEqual(html, "<div><p>This is a paragraph.</p></div>")
 
+    def test_markdown_to_html_multiple_paragraphs(self):
+        md = "This is the first paragraph.\n\nThis is the second paragraph."
+        html_node = markdown_to_html_node(md)
+        html = html_node.to_html()
+        self.assertEqual(html, "<div><p>This is the first paragraph.</p><p>This is the second paragraph.</p></div>")
 
-
-
-
+    def test_markdown_to_html_no_blocks(self):
+        md = ""
+        html_node = markdown_to_html_node(md)
+        html = html_node.to_html()
+        self.assertEqual(html, "<div></div>")
 
 
 
