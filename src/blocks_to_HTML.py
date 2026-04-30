@@ -39,6 +39,7 @@ def markdown_to_html_node(markdown: str):
                 else:
                     break
             new_block = block[count:].strip()
+            children.append(ParentNode(f"h{count}", text_to_children(new_block)))
 
     return ParentNode("div", children)
 
