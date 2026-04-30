@@ -125,6 +125,41 @@ class TestBlocksToHTML(unittest.TestCase):
             "<div><blockquote>This is a quote. It has multiple lines.</blockquote><pre><code>Code block</code></pre><p>This is a new paragraph.</p><h1>Heading</h1><blockquote>Another quote</blockquote><p>This is another paragraph.</p></div>"
         )
 
+    def test_markdown_to_html_unordered_list(self):
+        md = "- Item 1\n- Item 2\n- Item 3"
+        html_node = markdown_to_html_node(md)
+        html = html_node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul></div>"
+        )
+
+    def test_markdown_to_html_unordered_list_with_code(self):
+        md = "- Item 1\n- Item 2\n- Item 3\n\n```\nCode block\n```"
+        html_node = markdown_to_html_node(md)
+        html = html_node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul><pre><code>Code block</code></pre></div>"
+        )
+
+    def test_markdown_to_html_unordered_list_with_code_and_heading(self):
+        md = "- Item 1\n- Item 2\n- Item 3\n\n```\nCode block\n```\n\n# Heading"
+        html_node = markdown_to_html_node(md)
+        html = html_node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul><pre><code>Code block</code></pre><h1>Heading</h1></div>"
+        )
+
+    def test_markdown_to_html_unordered_list_with_code_and_heading_and_quote(self):
+        md = "- Item 1\n- Item 2\n- Item 3\n\n```\nCode block\n```\n\n# Heading\n\n> Quote"
+        html_node = markdown_to_html_node(md)
+        html = html_node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul><pre><code>Code block</code></pre><h1>Heading</h1><blockquote>Quote</blockquote></div>"
+        )
 
 if __name__ == "__main__":
     unittest.main()

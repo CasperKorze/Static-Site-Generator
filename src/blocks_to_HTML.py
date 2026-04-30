@@ -58,6 +58,18 @@ def markdown_to_html_node(markdown: str):
             new_block = " ".join(new_lines)
             children.append(ParentNode("blockquote", text_to_children(new_block)))
 
+        if block_type == BlockType.UNORDERED_LIST:
+            lines = block.split("\n")
+            list_items = []
+            for line in lines:
+                if line.startswith("- "):
+                    item_text = line[2:]
+                    list_items.append(ParentNode("li", text_to_children(item_text)))
+            children.append(ParentNode("ul", list_items))
+
+
+        
+
     return ParentNode("div", children)
 
 
