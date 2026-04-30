@@ -67,6 +67,16 @@ def markdown_to_html_node(markdown: str):
                     list_items.append(ParentNode("li", text_to_children(item_text)))
             children.append(ParentNode("ul", list_items))
 
+        if block_type == BlockType.ORDERED_LIST:
+            lines = block.split("\n")
+            list_items = []
+            for line in lines:
+                dot_index = line.find(". ")
+                if dot_index != -1:
+                    item_text = line[dot_index + 2:]
+                    list_items.append(ParentNode("li", text_to_children(item_text)))
+            children.append(ParentNode("ol", list_items))
+
 
         
 

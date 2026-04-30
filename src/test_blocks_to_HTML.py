@@ -161,5 +161,26 @@ class TestBlocksToHTML(unittest.TestCase):
             "<div><ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul><pre><code>Code block</code></pre><h1>Heading</h1><blockquote>Quote</blockquote></div>"
         )
 
+    def test_mardown_to_html_ordered_list(self):
+        md = "1. Item 1\n2. Item 2\n3. Item 3"
+        html_node = markdown_to_html_node(md)
+        html = html_node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ol><li>Item 1</li><li>Item 2</li><li>Item 3</li></ol></div>"
+        )
+
+
+    def test_mardown_to_html_ordered_list_with_unordered_list(self):
+        md = "1. Item 1\n2. Item 2\n3. Item 3\n\n- Item A\n- Item B\n- Item C"
+        html_node = markdown_to_html_node(md)
+        html = html_node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ol><li>Item 1</li><li>Item 2</li><li>Item 3</li></ol><ul><li>Item A</li><li>Item B</li><li>Item C</li></ul></div>"
+        )
+
+
+
 if __name__ == "__main__":
     unittest.main()
