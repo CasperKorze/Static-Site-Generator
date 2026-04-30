@@ -46,6 +46,32 @@ class TestBlocksToHTML(unittest.TestCase):
         html = html_node.to_html()
         self.assertEqual(html, "<div><p>####### This is a heading</p></div>")
 
+    def test_markdown_to_html_code_block(self):
+        md = "```\nThis is a code block.\n```"
+        html_node = markdown_to_html_node(md)
+        html = html_node.to_html()
+        self.assertEqual(html, "<div><pre>This is a code block.</pre></div>")
+
+
+    def test_markdown_to_html_code_block_1(self):
+        md = "```\nThis is a code block.\n```\n\nwhat it this ' or even this"
+        html_node = markdown_to_html_node(md)
+        html = html_node.to_html()
+        self.assertEqual(
+    html,
+        "<div><pre>This is a code block.</pre><p>what it this ' or even this</p></div>"
+    )
+        
+    def test_markdown_to_html_heading_code_block(self):
+        md = "# Heading\n\n```\nCode block\n```"
+        html_node = markdown_to_html_node(md)
+        html = html_node.to_html()
+        self.assertEqual(
+            html,
+            "<div><h1>Heading</h1><pre>Code block</pre></div>"
+        )
+
+
 
 
 

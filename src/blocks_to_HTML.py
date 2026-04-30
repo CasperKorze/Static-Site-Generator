@@ -41,6 +41,13 @@ def markdown_to_html_node(markdown: str):
             new_block = block[count:].strip()
             children.append(ParentNode(f"h{count}", text_to_children(new_block)))
 
+
+        if block_type == BlockType.CODE:
+            new_block = block.replace("```", "")
+            new_block = new_block.strip("\n")
+            code_node = LeafNode("code", new_block)
+            children.append(ParentNode("pre", [code_node]))
+
     return ParentNode("div", children)
 
 
