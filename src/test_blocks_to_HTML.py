@@ -50,7 +50,8 @@ class TestBlocksToHTML(unittest.TestCase):
         md = "```\nThis is a code block.\n```"
         html_node = markdown_to_html_node(md)
         html = html_node.to_html()
-        self.assertEqual(html, "<div><pre>This is a code block.</pre></div>")
+        self.assertEqual(html, "<div><pre><code>This is a code block.</code></pre></div>")
+
 
 
     def test_markdown_to_html_code_block_1(self):
@@ -59,21 +60,70 @@ class TestBlocksToHTML(unittest.TestCase):
         html = html_node.to_html()
         self.assertEqual(
     html,
-        "<div><pre>This is a code block.</pre><p>what it this ' or even this</p></div>"
-    )
+    "<div><pre><code>This is a code block.</code></pre><p>what it this ' or even this</p></div>"
+        )
+
         
     def test_markdown_to_html_heading_code_block(self):
         md = "# Heading\n\n```\nCode block\n```"
         html_node = markdown_to_html_node(md)
         html = html_node.to_html()
         self.assertEqual(
+        html,
+        "<div><h1>Heading</h1><pre><code>Code block</code></pre></div>"
+    )
+
+    def test_markdown_to_html_quote(self):
+        md = "> This is a quote.\n> It has multiple lines."
+        html_node = markdown_to_html_node(md)
+        html = html_node.to_html()
+        self.assertEqual(html, "<div><blockquote>This is a quote. It has multiple lines.</blockquote></div>")
+
+
+    def test_markdown_to_html_quote_with_newlines(self):
+        md = "> This is a quote.\n> It has multiple lines.\n\nThis is a new paragraph."
+        html_node = markdown_to_html_node(md)
+        html = html_node.to_html()
+        self.assertEqual(
             html,
-            "<div><h1>Heading</h1><pre>Code block</pre></div>"
+            "<div><blockquote>This is a quote. It has multiple lines.</blockquote><p>This is a new paragraph.</p></div>"
         )
 
+    def test_markdown_to_html_quote_with_newlines_and_code(self):
+        md = "> This is a quote.\n> It has multiple lines.\n\n```\nCode block\n```\n\nThis is a new paragraph."
+        html_node = markdown_to_html_node(md)
+        html = html_node.to_html()
+        self.assertEqual(
+            html,
+            "<div><blockquote>This is a quote. It has multiple lines.</blockquote><pre><code>Code block</code></pre><p>This is a new paragraph.</p></div>"
+        )
 
+    def test_markdown_to_html_quote_with_newlines_and_code_and_heading(self):
+        md = "> This is a quote.\n> It has multiple lines.\n\n```\nCode block\n```\n\nThis is a new paragraph.\n\n# Heading"
+        html_node = markdown_to_html_node(md)
+        html = html_node.to_html()
+        self.assertEqual(
+            html,
+            "<div><blockquote>This is a quote. It has multiple lines.</blockquote><pre><code>Code block</code></pre><p>This is a new paragraph.</p><h1>Heading</h1></div>"
+        )
 
+    def test_markdown_to_html_quote_with_newlines_and_code_and_heading_and_quote(self):
+        md = "> This is a quote.\n> It has multiple lines.\n\n```\nCode block\n```\n\nThis is a new paragraph.\n\n# Heading\n\n> Another quote"
+        html_node = markdown_to_html_node(md)
+        html = html_node.to_html()
+        self.assertEqual(
+            html,
+            "<div><blockquote>This is a quote. It has multiple lines.</blockquote><pre><code>Code block</code></pre><p>This is a new paragraph.</p><h1>Heading</h1><blockquote>Another quote</blockquote></div>"
+        )
 
+    def test_markdown_to_html_quote_with_newlines_and_code_and_heading_and_quote_and_paragraph(self):
+        md = "> This is a quote.\n> It has multiple lines.\n\n```\nCode block\n```\n\nThis is a new paragraph.\n\n# Heading\n\n> Another quote\n\nThis is another paragraph."
+        html_node = markdown_to_html_node(md)
+        html = html_node.to_html()
+        self.assertEqual(
+            html,
+            "<div><blockquote>This is a quote. It has multiple lines.</blockquote><pre><code>Code block</code></pre><p>This is a new paragraph.</p><h1>Heading</h1><blockquote>Another quote</blockquote><p>This is another paragraph.</p></div>"
+        )
 
 
 if __name__ == "__main__":
