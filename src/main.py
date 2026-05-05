@@ -1,3 +1,4 @@
+import os
 import sys
 from textnode import TextNode
 from copy_static_to_public import copy_static_to_public
@@ -10,8 +11,9 @@ def __main__():
 
     node = TextNode("This is some anchor text", "link", "https://www.boot.dev")
     copy_static_to_public("static", "docs")
-    generate_page("content/index.md", "template.html", "docs/index.html", basepath)
     generate_pages_recursive("content", "template.html", "docs", basepath)
+    with open(os.path.join("docs", ".nojekyll"), "w") as f:
+        pass
 
 
 

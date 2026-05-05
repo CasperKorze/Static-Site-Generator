@@ -6,9 +6,9 @@ def extract_title(markdown):
     if markdown == "":
         raise Exception("No title found in markdown")
 
-    for line in markdown.splitlines():
-        if line.startswith("# "):
-            return line[2:].strip()
+    first_line = markdown.splitlines()[0]
+    if first_line.startswith("# "):
+        return first_line[2:].strip()
 
     raise Exception("No title found in markdown")
 
@@ -26,6 +26,8 @@ def generate_page(from_path, template_path, dest_path, basepath):
     title = extract_title(markdown)
 
     page_content = template.replace("{{ Title }}", title).replace("{{ Content }}", html)
+    page_content = page_content.replace('href="/', f'href="{basepath}')
+    page_content = page_content.replace('src="/', f'src="{basepath}')
 
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
 
