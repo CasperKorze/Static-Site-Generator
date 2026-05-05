@@ -1,2 +1,2 @@
 # Static-Site-Generator
-Projekt z bootdeva, 
+[Projekt z bootdeva, ](https://casperkorze.github.io/Static-Site-Generator/)
