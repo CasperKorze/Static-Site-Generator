@@ -1,4 +1,3 @@
-
 from blocks_to_HTML import *
 import os
 
@@ -14,7 +13,7 @@ def extract_title(markdown):
     raise Exception("No title found in markdown")
 
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
 
     with open(from_path, "r") as f:
@@ -33,12 +32,12 @@ def generate_page(from_path, template_path, dest_path):
     with open(dest_path, "w") as f:
         f.write(page_content)
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     for item in os.listdir(dir_path_content):
         item_path = os.path.join(dir_path_content, item)
         if os.path.isdir(item_path):
-            generate_pages_recursive(item_path, template_path, os.path.join(dest_dir_path, item))
+            generate_pages_recursive(item_path, template_path, os.path.join(dest_dir_path, item), basepath)
         elif os.path.isfile(item_path) and item_path.endswith(".md"):
             dest_path = os.path.join(dest_dir_path, os.path.splitext(item)[0] + ".html")
-            generate_page(item_path, template_path, dest_path)
+            generate_page(item_path, template_path, dest_path, basepath)
             
